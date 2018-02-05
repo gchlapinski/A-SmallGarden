@@ -1,4 +1,5 @@
 // development ideas:
+// - mix vent cyclical actions
 // - cfg file with all const
 // - another thingspeak channel to read orders
 //   + turn off
@@ -53,13 +54,13 @@ const byte relVentMix = 6;
 ///////////////////////////////////////////////////////////////// monitor/management variables
 const byte startDay = 15; // 15:00
 const byte startNight = 6;
-const int errorHot = 320; // 32.0st
-const int errorCold = 165;
+const int errorHot = 330; // 32.0st
+const int errorCold = 170;
 const int errorUp = 500;
-const int upHot = 420;
-const int tooHot = 280; 
-const int almostHot = 250;
-const int notSoHot = 220;
+const int upHot = 450;
+const int tooHot = 295; 
+const int almostHot = 260;
+const int notSoHot = 230;
 
 unsigned long lastLightOff = 0;
 unsigned long lastHeatCableOff = 0;
@@ -67,7 +68,7 @@ unsigned long lastVentOut = 0;
 unsigned long lastVentIn = 0;
 unsigned long lastVentMix = 0;
 const unsigned long durVent = 100000; // 100sec
-const unsigned long breakVent = 1800000; // 20min
+const unsigned long breakVent = 3600000; // 60min
 const unsigned long lastOffTime = 60000; // turn on for at least 1min
 
 ///////////////////////////////////////////////////////////////// humidity sensors
@@ -646,7 +647,7 @@ void boxMonitor() {
       && oneMillis - lastHeatCableOff > lastOffTime) { // quick turn on/off protection
     relayState |= _BV(relHeatCable);
   } else if (((relayState & _BV(relHeatCable)) == _BV(relHeatCable))   // ????????????????????????????  
-             && (tempG + tempU) >= 2*(errorCold + 25)) {             // histereza = 2.0st  
+             && (tempG + tempU) >= 2*(errorCold + 15)) {             // histereza = 1.5st  
     relayState &= ~_BV(relHeatCable);
     lastHeatCableOff = oneMillis;
   }
